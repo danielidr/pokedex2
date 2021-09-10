@@ -1,0 +1,10 @@
+body {
+    background-image: url(../img/container_bg.png) ;
+}
+
+.logo {
+    height: 8rem;
+    width: 25rem;
+    margin-top: 2rem;
+    margin-left: 2rem;
+}
