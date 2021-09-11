@@ -37,86 +37,112 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             document.querySelector(`#${unicPokemon.name}`).addEventListener("click",function(e){
                                 e.preventDefault();
-                                let data = e.target.href;
                                 $("#exampleModal").modal("show");
-                                $('#exampleModalLabel').html(unicPokemon.name);
-                                $('#abilities').html(getAbilities(unicPokemon));
+                                document.getElementById('exampleModalLabel').innerText = unicPokemon.name;
+                                document.getElementById('abilities').innerText = getAbilities(unicPokemon);
+                                document.getElementById('type').innerText = getTypes(unicPokemon);
+                                document.getElementById('moves').innerText = getMoves(unicPokemon);
 
+                                let url_type = unicPokemon.types[0].type.url;
+
+                                    fetch(url_type)
+
+                                        .then(function(response){
+                                            return response.json();
+                                        })
+
+                                        .then(function(response){
+                                            console.log(response);
+                                            let generation = response.generation.name
+                                            document.getElementById('generation').innerText = generation;
+                                            document.querySelector('#relation').addEventListener("click",function(e) {
+                                                e.preventDefault();
+                                                $("#damage").modal("show");
+                                                document.getElementById('ddFrom').innerText = getDDFrom(response);
+                                                document.getElementById('ddTo').innerText = getDDTo(response);
+                                                document.getElementById('hdFrom').innerText = getHDFrom(response);
+                                                document.getElementById('hdTo').innerText = getHDTo(response);
+                                                document.getElementById('ndFrom').innerText = getNDFrom(response);
+                                                document.getElementById('ndTo').innerText = getNDTo(response);
+                                            })
+                                        })
                             })
-
-                            let url_type = unicPokemon.types[0].type.url;
-
-                            fetch (url_type)
-
-                                .then(function(response){
-                                    return response.json();
-                                })
-
-                                .then(function(response){
-                                    console.log(response);
-                                    let generation = response.generation.name
-                                    $('#generation').html(generation)
-                                })
                         })
                 })
             })
     }
 
-
-            //                     let abi = ''
-            //                     response.abilities.forEach(function (abilities) {
-            //                         abi = abi + ' ' + abilities.ability.name
-            //                     })
-            //                     let mov = ''
-            //                     response.moves.forEach(function (moves, index) {
-            //                         if (index < 5) {
-            //                             mov = mov + ' ' + moves.move.name
-            //                         }
-            //                     })
-            //                     $('#exampleModalLabel').html(name)
-            //                     $('#type').html(`Type: ${type}`)
-            //                     $('#abilities').html(`Abilities: ${abi}`)
-            //                     $('#moves').html(`Moves: ${mov}`)
-            //                 }
-            //             })
-            //         }
-            //     )
-            // }
-            // function getPokemonData(data){
-
-            //     fetch(data)
-            //     .then(function(response){
-            //         return response.json();
-            //     })
+    function getAbilities(unicPokemon){
+        let abi = 'Abilities:';
+        unicPokemon.abilities.forEach(function (abilities) {
+            abi = abi + ' ' + abilities.ability.name;
+        })
+        return abi;
+    }
     
-            //     .then(function(response){    
-            //         $('#abilities').html(getAbilities(response))
-            //         $('#type').html(getTypes(response))
-            //         $('#moves').html(getMoves(response))
-            //         });
-            // }
+    function getTypes(unicPokemon){
+        let typ = 'types:';
+        unicPokemon.types.forEach(function (types) {
+            typ = typ + ' ' + types.type.name;
+        })
+        return typ;
+    }
 
-            function getAbilities(unicPokemon){
-                let abi = 'Abilities:'
-                unicPokemon.abilities.forEach(function (abilities) {
-                    abi = abi + ' ' + abilities.ability.name
-                })
-                return abi
+    function getMoves(unicPokemon){
+        let mov = 'moves:';
+        unicPokemon.moves.forEach(function (moves, index) {
+            if (index < 5) {
+                mov = mov + ' ' + moves.move.name;
             }
-            // function getTypes(unicPokemon){
-            //     let typ = 'types:'
-            //     pokemon.types.forEach(function (types) {
-            //         typ = typ + ' ' + types.type.name
-            //     })
-            //     return typ
-            // }
-            // function getMoves(data){
-            //     let mov = 'moves:'
-            //     pokemon.moves.forEach(function (moves, index) {
-            //         if (index < 5) {
-            //             mov = mov + ' ' + moves.move.name
-            //         }
-            //     })
-            //     return mov
-            // }
+        })
+    return mov;
+    }
+
+    function getDDFrom(url_type){
+        let ddFrom = 'Double damage from:';
+        url_type.damage_relations.double_damage_from.forEach(function(damage) {
+            ddFrom = ddFrom + ' ' + damage.name;
+        });
+        return ddFrom;
+    }
+
+    function getDDTo(url_type){
+        let ddTo = 'Double damage to:';
+        url_type.damage_relations.double_damage_to.forEach(function(damage) {
+            ddTo = ddTo + ' ' + damage.name;
+        });
+        return ddTo;
+    }
+
+    function getHDFrom(url_type){
+        let hdFrom = 'Half damage from:';
+        url_type.damage_relations.half_damage_from.forEach(function(damage) {
+            hdFrom = hdFrom + ' ' + damage.name;
+        });
+        return hdFrom;
+    }
+
+    function getHDTo(url_type){
+        let hdTo = 'Half damage to:';
+        url_type.damage_relations.half_damage_to.forEach(function(damage) {
+            hdTo = hdTo + ' ' + damage.name;
+        });
+        return hdTo;
+    }
+
+    function getNDFrom(url_type){
+        let ndFrom = 'No damage from:';
+        url_type.damage_relations.no_damage_from.forEach(function(damage) {
+            ndFrom = ndFrom + ' ' + damage.name;
+        });
+        return ndFrom;
+    }
+
+    function getNDTo(url_type){
+        let ndTo = 'No damage to:';
+        url_type.damage_relations.no_damage_to.forEach(function(damage) {
+            ndTo = ndTo + ' ' + damage.name;
+        });
+        return ndTo;
+    }
 })
