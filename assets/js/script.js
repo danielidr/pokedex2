@@ -67,6 +67,28 @@ document.addEventListener('DOMContentLoaded', function() {
                                             })
                                         })
                             })
+                            
+                            document.getElementById('others').addEventListener("click",function(e){
+                                e.preventDefault();
+                                $("#othersPokemon").modal("show");
+
+                                let urlAbility = unicPokemon.abilities[0].ability.url;
+                                let pokemonList = "";
+                                    fetch(urlAbility)
+
+                                        .then(function(response){
+                                            return response.json();
+                                        })
+
+                                        .then(function(response){
+                                            console.log(response);
+                                            response.pokemon.forEach(function (ability) {
+                                                pokemonList += ability.pokemon.name + "\n";
+                                            })
+                                            document.getElementById('pokeAbility').innerText =  pokemonList;
+                                        })
+                            })
+                            
                         })
                 })
             })
